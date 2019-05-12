@@ -54,6 +54,17 @@ struct mint {
 
 constexpr int MOD = 1e9 + 7;
 int main() {
+    // test regex_match_with_dfa()
+    auto match = [&](const string & text, const string & re, const string & alphabet) {
+        auto dfa = construct_dfa_from_regex(re, alphabet);
+        return regex_match_with_dfa(text, dfa.first, dfa.second, alphabet);
+    };
+    assert (match("AABAAB", ".*A.*", "ABC"));
+    assert (match("AABAAB", "(.A*.)*", "ABC"));
+    assert (not match("AABAAB", "AAB", "ABC"));
+    assert (not match("AABAAB", ".*AAA.*", "ABC"));
+
+    // test count_regex_match()
     auto count = [&](const string & re, const string & alphabet, int length) {
         auto dfa = construct_dfa_from_regex(re, alphabet);
         return count_regex_match<mint<MOD> >(dfa.first, dfa.second, alphabet.size(), length + 1)[length].value;
